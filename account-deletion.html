@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Delete Your Reel Rivals Account</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0e0e14;
+    --panel: #17171f;
+    --border: #2a2a35;
+    --text: #e8e8ee;
+    --muted: #9797a6;
+    --green: #9dff3c;
+    --red: #ff5c5c;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 32px 16px 60px;
+    display: flex;
+    justify-content: center;
+  }
+  main {
+    width: 100%;
+    max-width: 460px;
+  }
+  h1 {
+    font-size: 20px;
+    letter-spacing: 0.3px;
+    margin: 0 0 6px;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 24px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+  }
+  .warning {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+  }
+  .warning strong { color: var(--text); }
+  label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 16px 0 6px;
+  }
+  input {
+    width: 100%;
+    background: #0e0e14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 12px;
+    color: var(--text);
+    font-size: 15px;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--green);
+  }
+  [data-hp] {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .captcha-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .captcha-q {
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  button {
+    width: 100%;
+    margin-top: 22px;
+    background: var(--green);
+    color: #0e0e14;
+    border: none;
+    border-radius: 8px;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .msg {
+    font-size: 13px;
+    line-height: 1.5;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 16px;
+    display: none;
+  }
+  .msg.error {
+    display: block;
+    background: rgba(255, 92, 92, 0.1);
+    border: 1px solid rgba(255, 92, 92, 0.35);
+    color: var(--red);
+  }
+  .msg.success {
+    display: block;
+    background: rgba(157, 255, 60, 0.08);
+    border: 1px solid rgba(157, 255, 60, 0.35);
+    color: var(--green);
+  }
+  .success-panel {
+    display: none;
+    text-align: center;
+    padding: 30px 10px;
+  }
+  .success-panel h2 {
+    color: var(--green);
+    font-size: 17px;
+    margin: 14px 0 8px;
+  }
+  .success-panel p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 28px;
+  }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Delete Your Account</h1>
+  <p class="sub">
+    Reel Rivals. Confirm your username and PIN below to permanently delete your account.
+    This works instantly and does not require contacting support.
+  </p>
+
+  <div class="panel">
+    <div class="warning">
+      <strong>Before you continue:</strong> deleting your account is immediate and cannot be undone from
+      here. Your username, PIN, and profile picture are permanently removed and every device is
+      signed out. Clips, comments, ratings, and chat messages you previously posted in a crew stay
+      visible to that crew (same as any group chat), but are no longer linked to your account or
+      identity. If you are the sole admin of a crew, another member automatically becomes admin.
+    </div>
+
+    <form id="delete-form" autocomplete="off">
+      <label for="pseudo">Username</label>
+      <input id="pseudo" name="pseudo" type="text" maxlength="24" autocomplete="off" required />
+
+      <label for="pin">4-digit PIN</label>
+      <input
+        id="pin"
+        name="pin"
+        type="password"
+        inputmode="numeric"
+        pattern="[0-9]{4}"
+        maxlength="4"
+        autocomplete="off"
+        required
+      />
+
+      <!-- Honeypot: hidden from real visitors via CSS, left empty by them.
+           A script that fills every field in the form trips this. -->
+      <label for="company" data-hp>Company</label>
+      <input id="company" name="company" type="text" data-hp tabindex="-1" autocomplete="off" />
+
+      <label for="captcha-answer" id="captcha-label">Loading verification…</label>
+      <div class="captcha-row">
+        <input id="captcha-answer" name="captcha-answer" type="text" inputmode="numeric" required />
+      </div>
+
+      <button id="submit-btn" type="submit">Delete My Account</button>
+      <div id="msg" class="msg" role="alert"></div>
+    </form>
+
+    <div id="success-panel" class="success-panel">
+      <h2>Your account has been deleted</h2>
+      <p>
+        Your username, PIN, and profile picture have been permanently removed and every device has
+        been signed out. You can close this page.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    Trouble deleting your account? Contact <a href="mailto:reelrivals877@gmail.com">reelrivals877@gmail.com</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var SUPABASE_URL = 'https://ojfywtojpzeghgcutgmj.supabase.co';
+  var SUPABASE_ANON_KEY =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qZnl3dG9qcHplZ2hnY3V0Z21qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMjA4MzcsImV4cCI6MjEwMTU5NjgzN30.R4pId7SnZifweheOFI_noDkBSAtaDGa2YM_wdmXkNh4';
+  var ENDPOINT = SUPABASE_URL + '/functions/v1/delete-account-request';
+
+  var form = document.getElementById('delete-form');
+  var msgEl = document.getElementById('msg');
+  var submitBtn = document.getElementById('submit-btn');
+  var captchaLabel = document.getElementById('captcha-label');
+  var captchaAnswer = document.getElementById('captcha-answer');
+  var successPanel = document.getElementById('success-panel');
+
+  var captcha = null;
+
+  function showMessage(text, kind) {
+    msgEl.textContent = text;
+    msgEl.className = 'msg ' + kind;
+  }
+  function clearMessage() {
+    msgEl.textContent = '';
+    msgEl.className = 'msg';
+  }
+
+  function loadCaptcha() {
+    captcha = null;
+    captchaLabel.textContent = 'Loading verification…';
+    captchaAnswer.value = '';
+    fetch(ENDPOINT, {
+      method: 'GET',
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + SUPABASE_ANON_KEY },
+    })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (data) {
+        if (typeof data.a !== 'number' || typeof data.b !== 'number') throw new Error('bad challenge');
+        captcha = data;
+        captchaLabel.textContent = 'What is ' + data.a + ' + ' + data.b + '?';
+      })
+      .catch(function () {
+        captchaLabel.textContent = 'Verification unavailable, please reload the page.';
+      });
+  }
+  loadCaptcha();
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearMessage();
+
+    var pseudo = document.getElementById('pseudo').value.trim();
+    var pin = document.getElementById('pin').value.trim();
+    var honeypot = document.getElementById('company').value;
+
+    if (!pseudo) {
+      showMessage('Enter your username.', 'error');
+      return;
+    }
+    if (!/^[0-9]{4}$/.test(pin)) {
+      showMessage('Your PIN must be exactly 4 digits.', 'error');
+      return;
+    }
+    if (!captcha) {
+      showMessage('Verification is still loading, please wait a moment and try again.', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Deleting…';
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        pseudo: pseudo,
+        pin: pin,
+        honeypot: honeypot,
+        captcha: {
+          a: captcha.a,
+          b: captcha.b,
+          exp: captcha.exp,
+          sig: captcha.sig,
+          answer: Number(captchaAnswer.value),
+        },
+      }),
+    })
+      .then(function (res) {
+        return res.json().then(function (data) {
+          return { ok: res.ok, data: data };
+        });
+      })
+      .then(function (result) {
+        if (result.ok && result.data && result.data.success) {
+          form.style.display = 'none';
+          successPanel.style.display = 'block';
+          return;
+        }
+        var message = (result.data && result.data.error) || 'Something went wrong, please try again.';
+        showMessage(message, 'error');
+        loadCaptcha();
+        document.getElementById('pin').value = '';
+      })
+      .catch(function () {
+        showMessage('Network error, please check your connection and try again.', 'error');
+        loadCaptcha();
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Delete My Account';
+      });
+  });
+})();
+</script>
+</body>
+</html>
